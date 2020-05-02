@@ -298,100 +298,100 @@
 
 
 <script>
-let nodeList = document.querySelectorAll('[filterpriceactive="0"]');
-let filterArray = document.querySelectorAll('.main_wrapp');
-let unilterArray = document.querySelectorAll('.unfilter_wrapp');
-let reservNode = filterArray[0].cloneNode(true);
-let itemsArray = [];
+function mainFilterItems() {
+
+	let nodeList = document.querySelectorAll('[filterpriceactive="0"]');
+	let filterArray = document.querySelectorAll('.main_wrapp');
+	let unilterArray = document.querySelectorAll('.unfilter_wrapp');
+	let itemsArray = [];
 
 
-//let itemsArray = [];
-//let parent = nodeList[0].parentNode;
+	function sort(value) {
+		for (let item of nodeList) {
+			itemsArray.push(item);
+		}
 
+		switch(value) {
+			case 'sortUp':
+				itemsArray.sort(function(nodeA, nodeB) {
+					if (parseInt(nodeA.getAttribute('data-price')) < parseInt(nodeB.getAttribute('data-price'))) return 1;
+					if (parseInt(nodeA.getAttribute('data-price')) > parseInt(nodeB.getAttribute('data-price'))) return -1;
+					return 0;
+				});
+			break;
+			case 'sortDown':
+				itemsArray.sort(function(nodeA, nodeB) {
+					if (parseInt(nodeA.getAttribute('data-price')) > parseInt(nodeB.getAttribute('data-price'))) return 1;
+					if (parseInt(nodeA.getAttribute('data-price')) < parseInt(nodeB.getAttribute('data-price'))) return -1;
+					return 0;
+				});
+			break;
+			case 'sortUpName':
+				itemsArray.sort(function(nodeA, nodeB) {
+					if (nodeA.getAttribute('data-itemname').substr(0, 1) > nodeB.getAttribute('data-itemname').substr(0, 1)) return 1;
+					if (nodeA.getAttribute('data-itemname').substr(0, 1) < nodeB.getAttribute('data-itemname').substr(0, 1)) return -1;
+					return 0;
+				});
+			break;
+			case ('sortDownName'):
+				itemsArray.sort(function(nodeA, nodeB) {
+					if (nodeA.getAttribute('data-itemname').substr(0, 1) < nodeB.getAttribute('data-itemname').substr(0, 1)) return 1;
+					if (nodeA.getAttribute('data-itemname').substr(0, 1) > nodeB.getAttribute('data-itemname').substr(0, 1)) return -1;
+					return 0;
+				});
+			break;
+		}
 
-function sort(value) {
-	for (let item of nodeList) {
-		itemsArray.push(item);
-	}
-
-	switch(value) {
-		case 'sortUp':
-			itemsArray.sort(function(nodeA, nodeB) {
-				if (parseInt(nodeA.getAttribute('data-price')) < parseInt(nodeB.getAttribute('data-price'))) return 1;
-				if (parseInt(nodeA.getAttribute('data-price')) > parseInt(nodeB.getAttribute('data-price'))) return -1;
-				return 0;
-			});
-		break;
-		case 'sortDown':
-			itemsArray.sort(function(nodeA, nodeB) {
-				if (parseInt(nodeA.getAttribute('data-price')) > parseInt(nodeB.getAttribute('data-price'))) return 1;
-				if (parseInt(nodeA.getAttribute('data-price')) < parseInt(nodeB.getAttribute('data-price'))) return -1;
-				return 0;
-			});
-		break;
-		case 'sortUpName':
-			itemsArray.sort(function(nodeA, nodeB) {
-				if (nodeA.getAttribute('data-itemname').substr(0, 1) > nodeB.getAttribute('data-itemname').substr(0, 1)) return 1;
-				if (nodeA.getAttribute('data-itemname').substr(0, 1) < nodeB.getAttribute('data-itemname').substr(0, 1)) return -1;
-				return 0;
-			});
-		break;
-		case ('sortDownName'):
-			itemsArray.sort(function(nodeA, nodeB) {
-				if (nodeA.getAttribute('data-itemname').substr(0, 1) < nodeB.getAttribute('data-itemname').substr(0, 1)) return 1;
-				if (nodeA.getAttribute('data-itemname').substr(0, 1) > nodeB.getAttribute('data-itemname').substr(0, 1)) return -1;
-				return 0;
-			});
-		break;
-	}
-
-	
-	for (let item of itemsArray) {
-		filterArray[0].append(item);
-	}
-}
-
-
-$('.sort_up').click(event => sort('sortUp'));
-$('.sort_down').click(event => sort('sortDown'));
-$('.sort_up_name').click(event => sort('sortUpName'));
-$('.sort_down_name').click(event => sort('sortDownName'));
-
-
-
-
-
-function itemFilter(activeFilter) {
-	let minPrice = parseInt(document.querySelector('.price_min').value);
-	let maxPrice = parseInt(document.querySelector('.price_max').value);
-
-	console.log(minPrice);
-	console.log(maxPrice);
-	for (let item of activeFilter) {
-		//console.log(item.getAttribute('data-price'));
-		if(parseInt(item.getAttribute('data-price')) >= minPrice && parseInt(item.getAttribute('data-price')) <= maxPrice) {
-			activeFilter.remove(item);
-		} else {
-			
+		
+		for (let item of itemsArray) {
+			filterArray[0].append(item);
 		}
 	}
-}
 
-function itemFilterRezet() {
-	filterArray.querySelectorAll('[filterpriceactive="0"]').remove();
 
-	for (let item of nodeList) {
-		filterArray.push(item);
+	$('.sort_up').click(event => sort('sortUp'));
+	$('.sort_down').click(event => sort('sortDown'));
+	$('.sort_up_name').click(event => sort('sortUpName'));
+	$('.sort_down_name').click(event => sort('sortDownName'));
+
+
+
+
+
+	function itemFilter(elements) {
+		let minPrice = parseInt(document.querySelector('.price_min').value);
+		let maxPrice = parseInt(document.querySelector('.price_max').value);
+
+		for(let elem of elements) {
+			if(parseInt(elem.getAttribute('data-price')) >= minPrice && parseInt(elem.getAttribute('data-price')) <= maxPrice) {
+			
+			} else {
+				elem.remove();
+			}
+		}
+		
 	}
 
+	function itemFilterRezet(elements) {
+		for(let elem of elements) {
+			elem.remove();
+		}
+
+
+		for(let item of nodeList) {
+			filterArray[0].appendChild(item);
+		}
+		
+
+	}
+
+	$('.filter_submit_wrapp button').click(event => itemFilter(nodeList));
+
+	$('.filter_rezet_wrapp button').click(event => itemFilterRezet(nodeList));
+
 }
 
-$('.filter_submit_wrapp button').click(event => itemFilter(filterArray));
-
-$('.filter_rezet_wrapp').click(event => itemFilterRezet);
-
-console.log(reservNode);
-	
+mainFilterItems();	
 </script>
 
 </body>
