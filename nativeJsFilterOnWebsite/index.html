@@ -138,9 +138,6 @@
 	</div>
 </div>
 
-<div class="unfilter_wrapp">
-	
-</div>
 
 <div class="main_wrapp">
 	<form action="" method="post" data-itemname="песчаник белый" data-price="350" data-color="белый" data-colornaturalrock="" data-width="1,5 см" filterpriceactive="0">
@@ -298,15 +295,48 @@
 
 
 <script>
-function mainFilterItems() {
+	function mainFilterItems() {
 
-	let nodeList = document.querySelectorAll('[filterpriceactive="0"]');
-	let filterArray = document.querySelectorAll('.main_wrapp');
-	let unilterArray = document.querySelectorAll('.unfilter_wrapp');
-	let itemsArray = [];
+		let nodeList = document.querySelectorAll('[filterpriceactive="0"]');
+		let filterArray = document.querySelectorAll('.main_wrapp');
+		let itemsArray = [];
+
+		function itemFilter(elements) {
+			let minPrice = parseInt(document.querySelector('.price_min').value);
+			let maxPrice = parseInt(document.querySelector('.price_max').value);
+
+			for(let elem of elements) {
+				if(parseInt(elem.getAttribute('data-price')) >= minPrice && parseInt(elem.getAttribute('data-price')) <= maxPrice) {
+				
+				} else {
+					elem.remove();
+				}
+			}
+		
+	}
+
+	function itemFilterRezet(elements) {
+		for(let elem of elements) {
+			elem.remove();
+		}
+
+
+		for(let item of nodeList) {
+			filterArray[0].appendChild(item);
+		}
+		
+
+	}
+
+	$('.filter_submit_wrapp button').click(event => itemFilter(nodeList));
+
+	$('.filter_rezet_wrapp button').click(event => itemFilterRezet(nodeList));
+
+
 
 
 	function sort(value) {
+
 		for (let item of nodeList) {
 			itemsArray.push(item);
 		}
@@ -346,48 +376,16 @@ function mainFilterItems() {
 		for (let item of itemsArray) {
 			filterArray[0].append(item);
 		}
-	}
 
+		itemFilter(nodeList);
+
+
+	}
 
 	$('.sort_up').click(event => sort('sortUp'));
 	$('.sort_down').click(event => sort('sortDown'));
 	$('.sort_up_name').click(event => sort('sortUpName'));
 	$('.sort_down_name').click(event => sort('sortDownName'));
-
-
-
-
-
-	function itemFilter(elements) {
-		let minPrice = parseInt(document.querySelector('.price_min').value);
-		let maxPrice = parseInt(document.querySelector('.price_max').value);
-
-		for(let elem of elements) {
-			if(parseInt(elem.getAttribute('data-price')) >= minPrice && parseInt(elem.getAttribute('data-price')) <= maxPrice) {
-			
-			} else {
-				elem.remove();
-			}
-		}
-		
-	}
-
-	function itemFilterRezet(elements) {
-		for(let elem of elements) {
-			elem.remove();
-		}
-
-
-		for(let item of nodeList) {
-			filterArray[0].appendChild(item);
-		}
-		
-
-	}
-
-	$('.filter_submit_wrapp button').click(event => itemFilter(nodeList));
-
-	$('.filter_rezet_wrapp button').click(event => itemFilterRezet(nodeList));
 
 }
 
