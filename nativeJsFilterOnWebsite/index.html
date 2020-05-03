@@ -343,18 +343,13 @@
 		let filterArray = document.querySelectorAll('#eFiltr_results');
 		let itemsArray = [];
 
-		
-
-
-
-
+		let allNumberProductPaginate = nodeList.length; //Количество элементов на странице
+		let showElemsPaginate = 18; //количество показываемых елементов
+		let numberPaginatePage = nodeList.length <= showElemsPaginate ? 1 : Math.ceil(allNumberProductPaginate / showElemsPaginate);
 
 		/*function paginate start*/
 		function paginateMain(nodeList){
-			let allNumberProductPaginate = nodeList.length; //Количество элементов на странице
-			let showElemsPaginate = 18; //количество показываемых елементов
-			let numberPaginatePage = allNumberProductPaginate <= showElemsPaginate ? 1 : Math.ceil(allNumberProductPaginate / showElemsPaginate);
-
+			
 			//Количество страниц пагинации
 			let allNumberProduct = nodeList; // все элементы для пагинации
 
@@ -452,9 +447,7 @@
 				} else {
 					elem.remove();
 				}
-			}
-			
-
+			}			
 
 		}
 
@@ -527,10 +520,12 @@
 			for (let item of itemsArray) {
 				filterArray[0].append(item);
 			}
+			
+			paginateMain(nodeList);
 
 			itemFilter(nodeList);
 
-			paginateMain(nodeList);
+			
 		}
 		/*function sort end*/
 
