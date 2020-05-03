@@ -7,31 +7,30 @@
 <body>
 
 <style>
-.main_wrapp {
+#eFiltr_results {
     display: flex;
     flex-wrap: wrap;
 }
 
-.main_wrapp [filterpriceactive='0'] {
-    display: block;
+#eFiltr_results [filterpriceactive='0'] {
     width: calc(100% / 4 - 20px);
     margin: 10px;
 }
 
-.main_wrapp [filterpriceactive='0'] img {
+#eFiltr_results [filterpriceactive='0'] img {
     display: block;
     width: calc(100% - 20px);
     box-sizing: border-box;
 }
 
-.main_wrapp [filterpriceactive='0'] span {
+#eFiltr_results [filterpriceactive='0'] span {
     width: 100%;
     display: block;
     font-size: 30px;
     text-align: center;
 }
 
-.sort_item_main_wrapp {
+.sort_item#eFiltr_results {
     display: flex;
     flex-wrap: wrap;
 }
@@ -47,6 +46,46 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+/*paginate items style*/
+#eFiltr_results form{
+  display: none;
+}
+
+#eFiltr_results .active ~ form{
+  display: block;
+}
+
+#eFiltr_results .end_active ~ form{
+  display: none;
+}
+/**/
+
+/**/
+.paginatWrapp {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.page_paginate {
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid #028edf;
+    padding: 5px;
+    min-width: 30px;
+    margin: 3px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.page_paginate.active {
+    background: linear-gradient(67deg, #038adf, #01bce6);
+    color: #fff;
+}
+/**/
 </style>
 
 
@@ -139,7 +178,7 @@
 </div>
 
 
-<div class="main_wrapp">
+<div id="eFiltr_results">
 	<form action="" method="post" data-itemname="песчаник белый" data-price="350" data-color="белый" data-colornaturalrock="" data-width="1,5 см" filterpriceactive="0">
 		<img src="image.jpg" alt="">
 		<span>песчаник белый</span>
@@ -291,6 +330,9 @@
 		<span>Цена: 7000</span>
 	</form>
 </div>
+
+<div class="paginatWrapp" style="display: flex;"></div>
+
 <script type="text/javascript" src="https://inkerkam.ru/assets/snippets/shopkeeper/js/jquery-1.6.3.min.js"></script>
 
 
@@ -298,9 +340,108 @@
 	function mainFilterItems() {
 
 		let nodeList = document.querySelectorAll('[filterpriceactive="0"]');
-		let filterArray = document.querySelectorAll('.main_wrapp');
+		let filterArray = document.querySelectorAll('#eFiltr_results');
 		let itemsArray = [];
 
+		
+
+
+
+
+
+		/*function paginate start*/
+		function paginateMain(nodeList){
+			let allNumberProductPaginate = nodeList.length; //Количество элементов на странице
+			let showElemsPaginate = 18; //количество показываемых елементов
+			let numberPaginatePage = allNumberProductPaginate <= showElemsPaginate ? 1 : Math.ceil(allNumberProductPaginate / showElemsPaginate);
+
+			//Количество страниц пагинации
+			let allNumberProduct = nodeList; // все элементы для пагинации
+
+			//генерация списка страниц
+			let paginatWrapp = document.querySelector(".paginatWrapp");
+
+			if(allNumberProductPaginate <= showElemsPaginate){
+				$(".paginatWrapp").css({'display' : 'none'});
+			} else{
+				$(".paginatWrapp").css({'display' : 'flex'});
+			}
+
+			let page = "";
+
+			for (let i = 0; i < numberPaginatePage; i++) {
+				page += "<span number-page=" + i * showElemsPaginate + "  class=\"page_paginate " + (i + 1) + "\">" + (i + 1) + "</span>";
+			}
+			paginatWrapp.innerHTML = page;
+
+			//классы активности для елементов на первой странице пагинации
+			paginatWrapp.firstChild.classList.add('active');
+
+			let wrapArray = [...document.querySelectorAll('#eFiltr_results > div')];
+			for(let i = 0; i < wrapArray.length; i++){
+				wrapArray[i].classList.add(i + 1);
+			}
+
+		    let correctParrent = document.querySelectorAll('[filterpriceactive="0"]')[0].parentElement;
+		    
+		    document.querySelectorAll('[filterpriceactive="0"]').forEach((elem, index) => {
+
+		        let parentElem = document.querySelector('#eFiltr_results');
+		        let separElem = document.createElement("div");
+		        let separTwo = document.createElement("div");
+		        
+		        if((index % showElemsPaginate) + 1 == true){
+		         
+		          parentElem.insertBefore(separElem, elem);
+		          parentElem.insertBefore(separElem, elem);
+		          parentElem.insertBefore(separTwo, elem);
+		        }
+
+
+		    });
+
+		  
+
+			let lastParentElem = document.createElement("div");
+			document.querySelector('#eFiltr_results').appendChild(lastParentElem);
+		  
+			[...document.querySelectorAll('#eFiltr_results > div')].forEach((elem, index) => {
+				if(index % 2 == true){
+				  elem.classList.add('paginStart');
+				} else {
+				  elem.classList.add('paginEnd');
+				}
+
+			});
+		  
+			document.querySelector('#eFiltr_results > div').remove();
+		  
+			//вешаем класс activ на страницу пагинации
+			[...document.querySelectorAll('#eFiltr_results > div.paginStart')][0].classList.add('active');
+			[...document.querySelectorAll('#eFiltr_results > div.paginEnd')][0].classList.add('end_active');
+
+			$('.paginatWrapp > span').click(function(){
+				$('.paginatWrapp > span').removeClass('active');
+				$('#eFiltr_results > div.paginStart').removeClass('active');
+				$('#eFiltr_results > div.paginEnd').removeClass('end_active');
+				this.classList.add('active');
+
+				[...document.querySelectorAll('.paginatWrapp > span')].forEach((elem, index) => {
+					if(elem.classList.contains('active') == true){
+						[...document.querySelectorAll('#eFiltr_results > div.paginStart')][index].classList.add('active');
+						[...document.querySelectorAll('#eFiltr_results > div.paginEnd')][index].classList.add('end_active');
+					}
+				});
+			});
+		  
+
+
+		}
+		/*function sort item end*/
+
+  
+
+		/*function filter and filter rezet start*/
 		function itemFilter(elements) {
 			let minPrice = parseInt(document.querySelector('.price_min').value);
 			let maxPrice = parseInt(document.querySelector('.price_max').value);
@@ -312,82 +453,95 @@
 					elem.remove();
 				}
 			}
-		
+			
+
+
+		}
+
+		function itemFilterRezet(elements) {
+			for(let elem of elements) {
+				elem.remove();
+			}
+
+
+			for(let item of nodeList) {
+				filterArray[0].appendChild(item);
+			}
+
+			Array.from(document.querySelectorAll('#eFiltr_results > div')).forEach(elem => elem.remove());
+
+			paginateMain(nodeList);
+			
+		}
+
+		$('.filter_submit_wrapp button').click(event => itemFilter(nodeList));
+
+		$('.filter_rezet_wrapp button').click(event => itemFilterRezet(nodeList));
+
+		/*function filter and filter rezet end*/
+
+
+
+		/*function sort start*/
+		function sort(value) {
+
+			for (let item of nodeList) {
+				itemsArray.push(item);
+			}
+
+			switch(value) {
+				case 'sortUp':
+					itemsArray.sort(function(nodeA, nodeB) {
+						if (parseInt(nodeA.getAttribute('data-price')) < parseInt(nodeB.getAttribute('data-price'))) return 1;
+						if (parseInt(nodeA.getAttribute('data-price')) > parseInt(nodeB.getAttribute('data-price'))) return -1;
+						return 0;
+					});
+				break;
+				case 'sortDown':
+					itemsArray.sort(function(nodeA, nodeB) {
+						if (parseInt(nodeA.getAttribute('data-price')) > parseInt(nodeB.getAttribute('data-price'))) return 1;
+						if (parseInt(nodeA.getAttribute('data-price')) < parseInt(nodeB.getAttribute('data-price'))) return -1;
+						return 0;
+					});
+				break;
+				case 'sortUpName':
+					itemsArray.sort(function(nodeA, nodeB) {
+						if (nodeA.getAttribute('data-itemname').substr(0, 1) > nodeB.getAttribute('data-itemname').substr(0, 1)) return 1;
+						if (nodeA.getAttribute('data-itemname').substr(0, 1) < nodeB.getAttribute('data-itemname').substr(0, 1)) return -1;
+						return 0;
+					});
+				break;
+				case ('sortDownName'):
+					itemsArray.sort(function(nodeA, nodeB) {
+						if (nodeA.getAttribute('data-itemname').substr(0, 1) < nodeB.getAttribute('data-itemname').substr(0, 1)) return 1;
+						if (nodeA.getAttribute('data-itemname').substr(0, 1) > nodeB.getAttribute('data-itemname').substr(0, 1)) return -1;
+						return 0;
+					});
+				break;
+			}
+
+			
+			Array.from(document.querySelectorAll('#eFiltr_results > div')).forEach(elem => elem.remove());
+
+
+			for (let item of itemsArray) {
+				filterArray[0].append(item);
+			}
+
+			itemFilter(nodeList);
+
+			paginateMain(nodeList);
+		}
+		/*function sort end*/
+
+		$('.sort_up').click(event => sort('sortUp'));
+		$('.sort_down').click(event => sort('sortDown'));
+		$('.sort_up_name').click(event => sort('sortUpName'));
+		$('.sort_down_name').click(event => sort('sortDownName'));
+
+		paginateMain(nodeList);
+
 	}
-
-	function itemFilterRezet(elements) {
-		for(let elem of elements) {
-			elem.remove();
-		}
-
-
-		for(let item of nodeList) {
-			filterArray[0].appendChild(item);
-		}
-		
-
-	}
-
-	$('.filter_submit_wrapp button').click(event => itemFilter(nodeList));
-
-	$('.filter_rezet_wrapp button').click(event => itemFilterRezet(nodeList));
-
-
-
-
-	function sort(value) {
-
-		for (let item of nodeList) {
-			itemsArray.push(item);
-		}
-
-		switch(value) {
-			case 'sortUp':
-				itemsArray.sort(function(nodeA, nodeB) {
-					if (parseInt(nodeA.getAttribute('data-price')) < parseInt(nodeB.getAttribute('data-price'))) return 1;
-					if (parseInt(nodeA.getAttribute('data-price')) > parseInt(nodeB.getAttribute('data-price'))) return -1;
-					return 0;
-				});
-			break;
-			case 'sortDown':
-				itemsArray.sort(function(nodeA, nodeB) {
-					if (parseInt(nodeA.getAttribute('data-price')) > parseInt(nodeB.getAttribute('data-price'))) return 1;
-					if (parseInt(nodeA.getAttribute('data-price')) < parseInt(nodeB.getAttribute('data-price'))) return -1;
-					return 0;
-				});
-			break;
-			case 'sortUpName':
-				itemsArray.sort(function(nodeA, nodeB) {
-					if (nodeA.getAttribute('data-itemname').substr(0, 1) > nodeB.getAttribute('data-itemname').substr(0, 1)) return 1;
-					if (nodeA.getAttribute('data-itemname').substr(0, 1) < nodeB.getAttribute('data-itemname').substr(0, 1)) return -1;
-					return 0;
-				});
-			break;
-			case ('sortDownName'):
-				itemsArray.sort(function(nodeA, nodeB) {
-					if (nodeA.getAttribute('data-itemname').substr(0, 1) < nodeB.getAttribute('data-itemname').substr(0, 1)) return 1;
-					if (nodeA.getAttribute('data-itemname').substr(0, 1) > nodeB.getAttribute('data-itemname').substr(0, 1)) return -1;
-					return 0;
-				});
-			break;
-		}
-
-		
-		for (let item of itemsArray) {
-			filterArray[0].append(item);
-		}
-
-		itemFilter(nodeList);
-
-
-	}
-
-	$('.sort_up').click(event => sort('sortUp'));
-	$('.sort_down').click(event => sort('sortDown'));
-	$('.sort_up_name').click(event => sort('sortUpName'));
-	$('.sort_down_name').click(event => sort('sortDownName'));
-
-}
 
 mainFilterItems();	
 </script>
