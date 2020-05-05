@@ -444,15 +444,18 @@
 
 		/*function filter and filter rezet start*/
 		function itemFilter(elements) {
-			let minPrice = parseInt(document.querySelector('.price_min').value);
+			//for "gifted" users
+			let minPrice = parseInt(document.querySelector('.price_min').value) > parseInt(document.querySelector('.price_max').value) ? 0 : parseInt(document.querySelector('.price_min').value);
 			let maxPrice = parseInt(document.querySelector('.price_max').value);
 
 			let color = document.querySelector('[name="select_colornaturalrock"]');
 			let colorValue = color.options[color.selectedIndex].value;
+			let width = document.querySelector('[name="select_width"]');
+			let widthValue = width.options[width.selectedIndex].value;
 			
 			for(let elem of elements) {
 				//filter on price
-				if(parseInt(elem.getAttribute('data-price')) >= minPrice && parseInt(elem.getAttribute('data-price')) <= maxPrice) {
+				if(parseInt(elem.getAttribute('data-price')) > minPrice && parseInt(elem.getAttribute('data-price')) <= maxPrice) {
 					//console.log(elem.getAttribute('data-colornaturalrock'));
 					
 				} else {
@@ -460,7 +463,14 @@
 				}
 
 				//filter on color
-				if (colorValue == '0' || elem.getAttribute('data-colornaturalrock').match(colorValue)) {
+				if (colorValue == '0' || elem.dataset.colornaturalrock.match(colorValue)) {
+
+				} else {
+					elem.remove();
+				}
+
+				//filter on width
+				if (widthValue == '0' || elem.dataset.width.match(widthValue)) {
 
 				} else {
 					elem.remove();
@@ -490,7 +500,10 @@
 			
 		}
 
-		$('.filter_submit_wrapp button').click(event => itemFilter(nodeList));
+		$('.filter_submit_wrapp button').click(event => {
+			itemFilterRezet(nodeList);
+			itemFilter(nodeList);
+		});
 
 		$('.filter_rezet_wrapp button').click(event => itemFilterRezet(nodeList));
 
