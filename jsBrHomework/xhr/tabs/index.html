@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Задача 2. Табы | Домашнее задание к лекции 2.3</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="tabs">
+    <nav>
+      <a href="components/email-tab.html" class="active">Email</a>
+      <a href="components/sms-tab.html">SMS</a>
+    </nav>
+
+    <div id="content">
+
+    </div>
+    <div id="preloader" class="hidden">Загрузка...</div>
+  </div>
+</body>
+</html>
+
+<script>
+  'use strict'
+  let links = document.querySelectorAll('nav > a');
+  let content = document.getElementById('content');
+  let preLoadElem = document.getElementById('preloader');
+
+  //получаем разметку форм по XHR запросу
+  const EMAIL_REQUEST = new XMLHttpRequest();
+  EMAIL_REQUEST.open(
+    "GET",
+    links[0].getAttribute('href'),
+    true
+  );
+  EMAIL_REQUEST.send();
+
+  //инициализируем форму Email при агрузке страницы
+  EMAIL_REQUEST.addEventListener('load', ()=> {
+    content.innerHTML = EMAIL_REQUEST.responseText;
+  });
+
+  function clickToTabs(event) {
+    //сброс стандартного события браузера и наешивание активного класса на выбранный таб
+    event.preventDefault();
+    links.forEach((elem) => elem.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    
+    let tabRequest = new XMLHttpRequest();
+    //таймер добавлен для визуализации запроса
+    tabRequest.timeout = 2000;
+
+    //инициализируем прелодер
+    tabRequest.addEventListener('loadstart', ()=> preLoadElem.classList.remove('hidden'));
+    tabRequest.addEventListener('loadend', ()=> preLoadElem.classList.add('hidden'));
+
+    //запрос и его инициализация
+    tabRequest.open(
+      "GET",
+      event.currentTarget.getAttribute('href'),
+      true
+    );
+    tabRequest.send();
+
+    tabRequest.addEventListener('load', ()=> {
+      content.innerHTML = tabRequest.responseText;
+    });
+
+  };
+  
+  links.forEach((elem) => elem.addEventListener('click', clickToTabs));
+
+</script>

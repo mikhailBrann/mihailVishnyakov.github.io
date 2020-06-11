@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+  <main class="slider">
+    <nav class="slider-nav">
+      <a data-action="prev">предыдущий слайд</a>
+      <a data-action="next">следующий слайд</a>
+      <a data-action="first">первый слайд</a>
+      <a data-action="last">последний слайд</a>
+    </nav>
+    <ul class="slides">
+      <li class="slide">
+        <img src="./i/1.jpg">
+      </li>
+      <li class="slide">
+        <img src="./i/2.jpg">
+      </li>
+      <li class="slide">
+        <img src="./i/3.jpg">
+      </li>
+      <li class="slide">
+        <img src="./i/4.jpg">
+      </li>
+      <li class="slide">
+        <img src="./i/5.jpg">
+      </li>
+      <li class="slide">
+        <img src="./i/9.jpg">
+      </li>
+      <li class="slide">
+        <img src="./i/10.jpg">
+      </li>
+    </ul>
+  </main>
+  <!--<script src="./js/slider.js"></script>-->
+</body>
+
+<script>
+  'use strict'
+  let sliderWrapp = document.getElementsByClassName('slides')[0];
+  let sliderButtons = document.querySelectorAll('.slider-nav > a');
+
+  //устанавливаем первый активный элемент слайдера
+  sliderWrapp.firstElementChild.classList.add('slide-current');
+
+  //создаем функцию проверки состояния кнопок в слайдере
+  function buttonsState() {
+    let activeSlide = document.getElementsByClassName('slide-current')[0];
+    sliderButtons.forEach((elem) => {
+      switch(elem.dataset.action) {
+        case 'prev':
+          if(activeSlide.previousElementSibling == null) {
+            elem.classList.add('disabled');
+          } else {
+            elem.classList.remove('disabled');
+          }
+        break;
+        case 'next':
+          if(activeSlide.nextElementSibling == null) {
+            elem.classList.add('disabled');
+          } else {
+            elem.classList.remove('disabled');
+          }
+        break;
+        case 'first':
+          if(sliderWrapp.firstElementChild.classList.contains('slide-current') == true) {
+            elem.classList.add('disabled');
+          } else {
+            elem.classList.remove('disabled');
+          }
+        break;
+        case 'last':
+          if(sliderWrapp.lastElementChild.classList.contains('slide-current') == true) {
+            elem.classList.add('disabled');
+          } else {
+            elem.classList.remove('disabled');
+          }
+        break;
+      }
+    });      
+  }
+  
+ 
+  //создаем функцию переключения слайдов
+  function sliderControl(event) {
+    let activeSlide = document.getElementsByClassName('slide-current')[0];
+    event.preventDefault();
+    let controlBtn = event.currentTarget;
+    switch(controlBtn.dataset.action) {
+      case 'prev':
+        if(activeSlide.previousElementSibling != null) {
+          activeSlide.classList.remove('slide-current');
+          activeSlide.previousElementSibling.classList.add('slide-current');
+        }           
+      break;
+      case 'next':
+        if(activeSlide.nextElementSibling != null) {
+          activeSlide.classList.remove('slide-current');
+          activeSlide.nextElementSibling.classList.add('slide-current');
+        }
+      break;
+      case 'first':
+        activeSlide.classList.remove('slide-current');
+        sliderWrapp.firstElementChild.classList.add('slide-current');
+      break;
+      case 'last':
+        activeSlide.classList.remove('slide-current');
+        sliderWrapp.lastElementChild.classList.add('slide-current');
+      break;
+    }
+    buttonsState(); 
+  }
+
+  
+  sliderButtons.forEach((elem) => elem.addEventListener('click', sliderControl));
+  buttonsState();
+</script>
+</html>

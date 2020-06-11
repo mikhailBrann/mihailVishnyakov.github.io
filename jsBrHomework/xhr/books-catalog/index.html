@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Задача 3. Каталог книг | Домашнее задание к лекции 2.3</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="card" class="hidden">
+    <button type="button" id="close"></button>
+    <h1 id="card-title"></h1>
+    <p id="card-author"></p>
+    <p id="card-info"></p>
+    <p><span id="card-price"></span> ₽</p>
+  </div>
+  <ul id="content">
+     <li
+         data-title="Земляне!"
+         data-author="Люрр"
+         data-info="Коротко и ясно. Кому не ясно — Люрр объяснит. Коротко"
+         data-price="490">
+       <img src="https://neto-api.herokuapp.com/hj/2.3/books/cover/earthlings.png">
+    </li>
+  </ul>
+
+  <script src="js/built-in-ui.js"></script>
+  <script>
+    'use strict'
+    //создаем новый XHR запрос
+    let booksBase = new XMLHttpRequest();
+    
+    //обрабатываем ошибки сети
+    booksBase.addEventListener("error", ()=> console.log('произошла ошибка сети'));
+
+    //получаем запрос списка книг
+    booksBase.addEventListener('load', loadLibrary);
+    booksBase.open(
+      "GET",
+      "https://neto-api.herokuapp.com/book/",
+      true
+    );
+    booksBase.send();
+
+    //при удачном получении запроса создаем элементы из полученного списка
+    function loadLibrary() {
+      if(booksBase.status !== 200) {
+        console.log(`Ошибка ${booksBase.status}: ${booksBase.statusText}`);
+      } else {
+        let booksContainer = document.getElementById('content');
+        let content = '';
+        let booksBaseObj = JSON.parse(booksBase.responseText);
+        
+        //собираем список книг(незнаю, корректна ли такая установка data аттрибутов в данном случае?)
+        booksBaseObj.forEach((elem)=> {
+          content += `<li data-title="${elem.title}" data-author="${elem.author.name}" data-info="${elem.info}" data-price="${elem.price}"><img src="${elem.cover.small}"></li>`;
+        });
+
+        booksContainer.innerHTML = content;
+      } 
+    }
+  </script>
+
+</body>
+</html>
