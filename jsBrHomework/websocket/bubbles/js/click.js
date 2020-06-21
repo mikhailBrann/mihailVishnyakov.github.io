@@ -17,4 +17,3 @@ bubleConnect.addEventListener('open', () => {
 
 	showBubbles(bubleConnect);
 });
-
