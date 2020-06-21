@@ -4,16 +4,17 @@ let bubleConnect = new WebSocket('wss://neto-api.herokuapp.com/mouse');
 
 bubleConnect.addEventListener('open', () => {
 	console.log('Вебсокет-соединение открыто');
+
+	let bubbleCoordinate = document.addEventListener('mousedown', createClickBubble);
+
+	function createClickBubble(event) {
+		let bubble = {
+			x: event.clientX,
+			y: event.clientY
+		}
+		bubleConnect.send(JSON.stringify(bubble));
+	}
+
+	showBubbles(bubleConnect);
 });
 
-bubleConnect.send(JSON.stringify({
-	test: 'ТЕСТ'
-}));
-
-bubleConnect.addEventListener('message', event => {
-	console.log(`сообщение с сервера: ${event.data}`);
-});
-
-bubleConnect.addEventListener('error', error => {
-	console.log(`ошибка: ${error.data}`);
-});
