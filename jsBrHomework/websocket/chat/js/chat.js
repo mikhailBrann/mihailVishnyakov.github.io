@@ -5,15 +5,15 @@ let messageBox = chatWrapp.getElementsByClassName('message-box')[0];
 let messageInput = messageBox.getElementsByClassName('message-input')[0];
 let messageSubmit = messageBox.getElementsByClassName('message-submit')[0];
 
+let chatStatus = chatWrapp.getElementsByClassName('chat-status')[0];
+
 let messagesContent = chatWrapp.getElementsByClassName('messages-content')[0];
+let messagesTemplates = chatWrapp.getElementsByClassName('messages-templates')[0];
 
-let chatStatus = chatWrapp.getElementsByClassName('chat-status')[0]
 
-console.log(chatWrapp);
-console.log(messageBox);
-console.log(messageInput);
-console.log(messageSubmit);
-console.log(messagesContent);
+
+
+
 
 
 window.addEventListener('load', () => {
@@ -22,12 +22,21 @@ window.addEventListener('load', () => {
 	chatConnected.addEventListener('open', () => {
 		chatStatus.innerText = chatStatus.getAttribute('data-online');
 		messageSubmit.removeAttribute('disabled');
+
+		chatConnected.addEventListener('close', ()=> {
+			chatStatus.innerText = chatStatus.getAttribute('data-offline');
+			messageSubmit.addAttribute('disabled');
+		});
 	});
 
 	chatConnected.addEventListener('message', (event) => {
 		console.log(event.data);
 	});
+
+	setTimeout(1000, () => chatConnected.close(1000));
 });
+
+
 /*
 Интерфейс
 Весь интерфейс чата сосредоточен в теге с классом chat. Выполняйте поиск компонентов чата только в нём.+
@@ -57,10 +66,10 @@ window.addEventListener('load', () => {
 
 
 Функционал
-При открытии страницы необходимо установить соединение с веб-сокетом по адресу wss://neto-api.herokuapp.com/chat.
+При открытии страницы необходимо установить соединение с веб-сокетом по адресу wss://neto-api.herokuapp.com/chat.+
 
 Если соединение успешно установлено, необходимо обновить статус чата,
-а также активировать кнопку «Отправить сообщение» и вывести уведомление с текстом «Пользователь появился в сети».
+а также активировать кнопку «Отправить сообщение» и вывести уведомление с текстом «Пользователь появился в сети».+
 
 При получении сообщения по веб-сокет соединению необходимо проверить текст сообщения. Если он равен ... (три точки),
 то необходимо отобразить информацию о том, что собеседник сейчас печатает сообщение. Если текст сообщения другой,
