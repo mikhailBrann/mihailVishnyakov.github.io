@@ -1,12 +1,12 @@
 'use strict';
 
-Promise.all([loadTwitt('callback', 'https://neto-api.herokuapp.com/twitter/jsonp')]).then(createTwittCart);
+Promise.all([loadTwitt('jsonp', 'https://neto-api.herokuapp.com/twitter/jsonp')]).then(createTwittCart);
 
 
-function loadTwitt(callbackName,dataUrl) {
+function loadTwitt(callbackName = 'jsonp',dataUrl) {
 	return new Promise((done, fall) => {
 		const genericScript = document.createElement('script');
-		genericScript.src = `${dataUrl}?callback=${callbackName}`;
+		genericScript.src = `${dataUrl}?jsonp=${callbackName}`;
 		document.body.appendChild(genericScript);
 		window[callbackName] = done;
 	});
