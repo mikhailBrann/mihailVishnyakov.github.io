@@ -15,11 +15,11 @@ function loadTwitt(callbackName, data[0]Url) {
 function createTwittCart(data) {
 	console.log(data[0]);
 	let twitterContainer = document.getElementsByClassName('container')[0];
-	twitterContainer.querySelector('[data[0]-wallpaper]').src = data[0].wallpaper;
-	twitterContainer.querySelector('[data[0]-username]').innerText = data[0].username;
-	twitterContainer.querySelector('[data[0]-description]').innerText = data[0].description;
-	twitterContainer.querySelector('[data[0]-pic]').src = data[0].pic;
-	twitterContainer.querySelector('[data[0]-tweets]').innerText = data[0].tweets;
-	twitterContainer.querySelector('[data[0]-followers]').innerText = data[0].followers;
-	twitterContainer.querySelector('[data[0]-following]').innerText = data[0].following;
+	twitterContainer.querySelector('[data-wallpaper]').src = data[0].wallpaper;
+	twitterContainer.querySelector('[data-username]').innerText = data[0].username;
+	twitterContainer.querySelector('[data-description]').innerText = data[0].description;
+	twitterContainer.querySelector('[data-pic]').src = data[0].pic;
+	twitterContainer.querySelector('[data-tweets]').innerText = data[0].tweets;
+	twitterContainer.querySelector('[data-followers]').innerText = data[0].followers;
+	twitterContainer.querySelector('[data-following]').innerText = data[0].following;
 }
