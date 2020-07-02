@@ -13,6 +13,7 @@ function loadTwitt(callbackName, dataUrl) {
 }
 
 function createTwittCart(data) {
+	console.log(data);
 	let twitterContainer = document.getElementsByClassName('container')[0];
 	twitterContainer.querySelector('[data-wallpaper]').src = data.wallpaper;
 	twitterContainer.querySelector('[data-username]').innerText = data.username;
