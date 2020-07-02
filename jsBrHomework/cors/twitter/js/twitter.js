@@ -4,7 +4,7 @@ Promise.all([loadTwitt('jsonp', 'https://neto-api.herokuapp.com/twitter/jsonp')]
 
 
 function loadTwitt(callbackName = 'jsonp',dataUrl) {
-	return new Promise((done, fall) => {
+	return new Promise((done, fail) => {
 		const genericScript = document.createElement('script');
 		genericScript.src = `${dataUrl}?jsonp=${callbackName}`;
 		document.body.appendChild(genericScript);
