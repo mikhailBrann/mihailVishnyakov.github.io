@@ -3,10 +3,10 @@
 Promise.all([loadTwitt('callback', 'https://neto-api.herokuapp.com/twitter/jsonp')]).then(createTwittCart);
 
 
-function loadTwitt(callbackName, data[0]Url) {
+function loadTwitt(callbackName, dataUrl) {
 	return new Promise((done, fail) => {
 		const genericScript = document.createElement('script');
-		genericScript.src = `${data[0]Url}?callback=${callbackName}`;
+		genericScript.src = `${dataUrl}?callback=${callbackName}`;
 		document.body.appendChild(genericScript);
 		window[callbackName] = done;
 	});
