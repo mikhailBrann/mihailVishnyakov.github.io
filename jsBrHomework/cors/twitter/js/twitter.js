@@ -1,8 +1,5 @@
 'use strict';
 
-//инициализируем запрос
-Promise.all([loadTwitt('callback', 'https://neto-api.herokuapp.com/twitter/jsonp')]).then(createTwittCart);
-
 //создаем запрос
 function loadTwitt(callbackName, dataUrl) {
 	return new Promise((done, fail) => {
@@ -24,3 +21,6 @@ function createTwittCart(data) {
 	twitterContainer.querySelector('[data-followers]').innerText = data[0].followers;
 	twitterContainer.querySelector('[data-following]').innerText = data[0].following;
 }
+
+//инициализируем запрос 
+Promise.all([loadTwitt('callback', 'https://neto-api.herokuapp.com/twitter/jsonp')]).then(createTwittCart);
