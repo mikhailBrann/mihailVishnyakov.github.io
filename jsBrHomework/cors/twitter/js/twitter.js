@@ -1,8 +1,9 @@
 'use strict';
 
+//инициализируем запрос
 Promise.all([loadTwitt('callback', 'https://neto-api.herokuapp.com/twitter/jsonp')]).then(createTwittCart);
 
-
+//создаем запрос
 function loadTwitt(callbackName, dataUrl) {
 	return new Promise((done, fail) => {
 		const genericScript = document.createElement('script');
@@ -12,8 +13,8 @@ function loadTwitt(callbackName, dataUrl) {
 	});
 }
 
+//заполняем twitter карточку
 function createTwittCart(data) {
-	console.log(data[0]);
 	let twitterContainer = document.getElementsByClassName('container')[0];
 	twitterContainer.querySelector('[data-wallpaper]').src = data[0].wallpaper;
 	twitterContainer.querySelector('[data-username]').innerText = data[0].username;
