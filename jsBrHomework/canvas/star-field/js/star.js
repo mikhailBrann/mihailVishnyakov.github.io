@@ -19,8 +19,11 @@ function starHeven() {
 	canvasContext.clip();
 	canvasContext.fill();
 
+	//рандомная функция для вычислений
 	let randomNum = (min, max) => (min + Math.random() * (max - min)).toFixed(1);
-	let starsNumber =  Math.floor(randomNum(200, 400));
+
+	//количество звезд
+	let starsNumber = Math.floor(randomNum(200, 400));
 	
 
 	//конфигуратор звезды
@@ -55,19 +58,15 @@ function starHeven() {
 		return star;	
 	};
 
-	for(let i = 0; i <= starsNumber; i++) {
-		starItemsArray.push(starConfig());
-	}
 
-	//отрисовывыем звезды
-	starItemsArray.forEach((star) => {
+	//отрисовываем звезды
+	for(let i = 0; i <= starsNumber; i++) {
+		let star = starConfig();
 		canvasContext.beginPath();
 		canvasContext.fillStyle = star.starColor;
 		canvasContext.globalAlpha = star.starShine;
 		canvasContext.arc(star.positionX, star.positionY, star.starSize, 0, 2 * Math.PI);
 		canvasContext.fill();
-		
-	});
+	}
 
-	console.log(starItemsArray.length);
 }
