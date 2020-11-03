@@ -9,9 +9,9 @@ function starHeven() {
 	let canvasContext = CANVAS.getContext('2d');
 	let randomNum = (min, max) => (min + Math.random() * (max - min)).toFixed(1);
 	let starsNumber =  Math.floor(randomNum(200, 400));
+	let starItemsArray = [];
 
 	let starConfig = () => {
-		
 		let starSize = randomNum(0, 1.1);
 		let starShine = randomNum(0.8, 1);
 		let starColor = () => {
@@ -29,10 +29,18 @@ function starHeven() {
 			return colorResult;
 		};
 
-		return starColor();
-		
+		let star = {
+			starSize: starSize,
+			starShine: starShine,
+			starColor: starColor()
+		}
+
+		return star;	
 	};
 
-	console.log(starConfig());
-	console.log('test');
+	for(let i = 0; i <= starsNumber; i++) {
+		starItemsArray.push(starConfig());
+	}
+
+	console.log(starItemsArray);
 }
