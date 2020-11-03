@@ -1,19 +1,34 @@
 'use strict'
+const CANVAS = document.querySelector('canvas');
+let canvasContext = CANVAS.getContext('2d');
+
+
 //инициализируем события
 window.addEventListener('load', starHeven);
+CANVAS.addEventListener('click', starHeven);
 
 
 
 function starHeven() {
-	const CANVAS = document.querySelector('canvas');
-	let canvasContext = CANVAS.getContext('2d');
+	let starItemsArray = [];
+	
+	//background
+	canvasContext.beginPath();
+	canvasContext.rect(0,0,800,400);
+	canvasContext.fillStyle = 'black';
+	canvasContext.clip();
+	canvasContext.fill();
+
 	let randomNum = (min, max) => (min + Math.random() * (max - min)).toFixed(1);
 	let starsNumber =  Math.floor(randomNum(200, 400));
-	let starItemsArray = [];
+	
 
+	//конфигуратор звезды
 	let starConfig = () => {
 		let starSize = randomNum(0, 1.1);
 		let starShine = randomNum(0.8, 1);
+		let starPositionX = Math.floor(randomNum(0, 400));
+		let starPositionY = Math.floor(randomNum(0, 800));
 		let starColor = () => {
 			let colorResult;
 			let colorRandom = randomNum(0, 3);
@@ -32,7 +47,9 @@ function starHeven() {
 		let star = {
 			starSize: starSize,
 			starShine: starShine,
-			starColor: starColor()
+			starColor: starColor(),
+			positionX: starPositionX,
+			positionY: starPositionY
 		}
 
 		return star;	
@@ -42,5 +59,15 @@ function starHeven() {
 		starItemsArray.push(starConfig());
 	}
 
-	console.log(starItemsArray);
+	//отрисовывыем звезды
+	starItemsArray.forEach((star) => {
+		canvasContext.beginPath();
+		canvasContext.fillStyle = star.starColor;
+		canvasContext.globalAlpha = star.starShine;
+		canvasContext.arc(star.positionX, star.positionY, star.starSize, 0, 2 * Math.PI);
+		canvasContext.fill();
+		
+	});
+
+	console.log(starItemsArray.length);
 }
