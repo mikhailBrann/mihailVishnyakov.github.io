@@ -13,31 +13,45 @@ const CURVES = {
 	dots: []
 };
 
-let lineHeight = 100;
+let widthDirection = false;
+let lineWidth = 100;
 
 let drawing = (event) => {
 	if(event.which == 1) {
-		if(event.shiftKey) {
-			if(lineHeight >= 5) {
-				lineHeight -= 1;
+		
+		function repaint() {
+			if (widthDirection) {
+				if (lineWidth == 100) { 
+				widthDirection = false;
+				lineWidth--;  
+				} else { 
+				lineWidth++
+				};
 			} else {
-				lineHeight += 1;
+				if (lineWidth == 5) {
+				widthDirection = true;
+				lineWidth++;  
+				} else {
+				lineWidth--
+				};
 			}
-			console.log(lineHeight);
+
 		}
+
+		repaint();
 
 		let curve = {
 			posX: event.offsetX,
 			posY: event.offsetY,
 			color: 'hsl(280deg 100% 52%)',
-			size: 20
+			size: lineWidth
 		};
 
 		CURVES.dots.push(curve);
 
 		CURVES.dots.forEach((elem) => {
 			CTX.beginPath();
-			CTX.lineWidth = 10;
+			CTX.lineWidth = elem.size;
 			CTX.lineJoin = 'round';
 			CTX.lineCap = 'round';
 			CTX.fillStyle = elem.color;
