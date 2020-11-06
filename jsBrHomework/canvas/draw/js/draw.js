@@ -4,15 +4,18 @@ let sizeCanvas = {
 	canvY: document.documentElement.clientHeight
 };
 
-console.log(sizeCanvas);
+
 const CANVAS = document.getElementById('draw');
+CANVAS.width = sizeCanvas.canvX;
+CANVAS.height = sizeCanvas.canvY;
+
 
 const CTX = CANVAS.getContext('2d');
 CTX.beginPath();
-CTX.rect(0, 0, 300, 150);
+CTX.rect(0, 0, sizeCanvas.canvX, sizeCanvas.canvY);
 CTX.fillStyle = 'red';
-CTX.clip();
 CTX.fill();
+CTX.clip();
 
 
 let randomNumb = (min, max) => Math.round(min + Math.random() * (max - min));
@@ -23,6 +26,7 @@ const CURVES = {
 let widthDirection = false;
 let lineWidth = 100;
 let lineColor = 359;
+let curves = [];
 
 let drawing = (event) => {
 	if(event.which == 1) {
@@ -56,28 +60,18 @@ let drawing = (event) => {
 
 		repaint();
 
-		let curve = {
-			posX: event.offsetX,
-			posY: event.offsetY,
-			color: 'hsl(' + lineColor + 'deg 100% 52%)',
-			size: lineWidth
-		};
+	
 
-		CURVES.dots.push(curve);
+		CTX.beginPath();
+		CTX.lineWidth = lineWidth;
+		CTX.lineJoin = 'round';
+		CTX.lineCap = 'round';
+		CTX.moveTo(event.offsetX, event.offsetY);
+		CTX.lineTo(event.offsetX, event.offsetY);
+		CTX.strokeStyle = 'hsl(' + lineColor + 'deg 100% 52%)';
+		CTX.stroke();
+		CTX.closePath();
 
-		CURVES.dots.forEach((elem) => {
-			CTX.beginPath();
-			CTX.lineWidth = elem.size;
-			CTX.lineJoin = 'round';
-			CTX.lineCap = 'round';
-			CTX.fillStyle = elem.color;
-			CTX.moveTo(elem.posX,elem.posY);
-			CTX.lineTo(elem.posX,elem.posY);
-			CTX.strokeStyle = elem.color;
-			CTX.stroke();
-			//CTX.arc(elem.posX, elem.posY, elem.size, 0, 2 * Math.PI);
-			//CTX.fill();
-		});
 	}
 };
 
