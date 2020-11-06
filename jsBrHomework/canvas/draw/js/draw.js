@@ -1,5 +1,12 @@
 'use strict';
+let sizeCanvas = {
+	canvX: document.documentElement.clientWidth, 
+	canvY: document.documentElement.clientHeight
+};
+
+console.log(sizeCanvas);
 const CANVAS = document.getElementById('draw');
+
 const CTX = CANVAS.getContext('2d');
 CTX.beginPath();
 CTX.rect(0, 0, 300, 150);
@@ -15,6 +22,7 @@ const CURVES = {
 
 let widthDirection = false;
 let lineWidth = 100;
+let lineColor = 359;
 
 let drawing = (event) => {
 	if(event.which == 1) {
@@ -36,6 +44,14 @@ let drawing = (event) => {
 				};
 			}
 
+			if(event.shiftKey) {
+				lineColor = lineColor == 0 ? 359: lineColor -=1;
+			} else {
+				lineColor = lineColor == 359 ? 0: lineColor +=1;
+			}
+
+			console.log(lineColor);
+
 		}
 
 		repaint();
@@ -43,7 +59,7 @@ let drawing = (event) => {
 		let curve = {
 			posX: event.offsetX,
 			posY: event.offsetY,
-			color: 'hsl(280deg 100% 52%)',
+			color: 'hsl(' + lineColor + 'deg 100% 52%)',
 			size: lineWidth
 		};
 
