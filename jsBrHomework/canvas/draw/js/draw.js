@@ -59,9 +59,6 @@ let drawing = (event) => {
 		}
 
 		repaint();
-
-	
-
 		CTX.beginPath();
 		CTX.lineWidth = lineWidth;
 		CTX.lineJoin = 'round';
@@ -82,5 +79,3 @@ CANVAS.addEventListener('mousemove', (eventMove) => {
 	drawing(eventMove);	
 });
 
-
-//hsl(280deg 100% 52%);
