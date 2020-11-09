@@ -30,7 +30,12 @@ let curves = [];
 
 let drawing = (event) => {
 	if(event.which == 1) {
-		
+		function makePoint(x, y) {
+			return [x, y];
+		};
+
+		curves.push(makePoint(event.offsetX, event.offsetY, event.shiftKey));
+
 		function repaint() {
 			if (widthDirection) {
 				if (lineWidth == 100) { 
@@ -54,20 +59,24 @@ let drawing = (event) => {
 				lineColor = lineColor == 359 ? 0: lineColor +=1;
 			}
 
-			console.log(lineColor);
+			CTX.beginPath();
+			CTX.lineWidth = lineWidth;
+			CTX.lineJoin = 'round';
+			CTX.lineCap  = 'round';
+			CTX.strokeStyle = `hsl(${lineColor}, 100%, 50%)`;
+		  
+			CTX.moveTo(curves[0], curves[1]);
+			for (let i = 1; i <= curves.length - 1; i++) {
+				CTX.lineTo(...curves[i]);    
+			  }
+			CTX.stroke();
+			CTX.closePath();
+			curves.splice(0, curves.length - 2);
 
+			
 		}
 
 		repaint();
-		CTX.beginPath();
-		CTX.lineWidth = lineWidth;
-		CTX.lineJoin = 'round';
-		CTX.lineCap = 'round';
-		CTX.moveTo(event.offsetX, event.offsetY);
-		CTX.lineTo(event.offsetX, event.offsetY);
-		CTX.strokeStyle = 'hsl(' + lineColor + 'deg 100% 52%)';
-		CTX.stroke();
-		CTX.closePath();
 
 	}
 };
