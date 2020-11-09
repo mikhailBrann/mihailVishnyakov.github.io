@@ -79,7 +79,6 @@ let drawing = (event) => {
 
 
 CANVAS.addEventListener('mousemove', (eventMove) => {
-	//console.log(`positionX: ${event.offsetX}\n positionY:  ${event.offsetY}`);
 	drawing(eventMove);	
 });
 
