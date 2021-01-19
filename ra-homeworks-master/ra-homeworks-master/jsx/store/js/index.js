@@ -10,4 +10,3 @@ const item = {
 
 
 //ReactDOM.render(<ShopItem item={item} />, document.getElementById('root'));
-console.log(React.version);
