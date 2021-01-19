@@ -7,5 +7,7 @@ const item = {
   currency: '£'
 }
 
+
+
 //ReactDOM.render(<ShopItem item={item} />, document.getElementById('root'));
-console.log('valera 12');
+console.log(React.version);
