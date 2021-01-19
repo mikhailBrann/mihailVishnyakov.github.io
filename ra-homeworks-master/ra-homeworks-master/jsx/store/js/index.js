@@ -8,4 +8,4 @@ const item = {
 }
 
 //ReactDOM.render(<ShopItem item={item} />, document.getElementById('root'));
-console.log('valera 1');
+console.log('valera 12');
