@@ -1,2 +1,1 @@
-const TEXT = 'hello world!';
-const HELLO = React.createElement('h2', null, TEXT);
+const HELLO = <h1>Hello world!</h1>;
