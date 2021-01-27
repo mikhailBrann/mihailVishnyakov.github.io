@@ -24,15 +24,29 @@
 // </div>
 // Соответственно название производителя необходимо подставить в h2, название товара в h1, краткое описание в <h3>, подробное описание в div.description, цену и валюту в div.price. При этом символ валюты должен следовать перед ценой, а цена должна быть представлена с двумя числами после запятой.
 
-const TEXT = 'Hello world!';
-const CONFIG = {
-    marginTop:20,
-    color:'grey'
-};
-const IMG_SRC = 'https://i.pinimg.com/originals/6c/bf/09/6cbf09506c7cf760f8010673ba7c45cd.jpg';
-const HELLO = (
-    <div className="title_wrapper">
-        <img src={IMG_SRC} alt="Лисенок"/>
-        <h1 style={CONFIG}>{TEXT}</h1>
-    </div>
-);
+
+
+const ShopItem = (item) => {
+    if(!item) {
+        return null;
+    }
+    let itemRenderConfig = (
+        <div className="main-content">
+            <h2>{item.brand}</h2>
+            <h1>{item.title}</h1>
+            <h3>{item.description}</h3>
+            <div className="description">{item.descriptionFull}</div>
+            <div className="highlight-window  mobile">
+                <div className="highlight-overlay"></div>
+            </div>
+            <div className="divider"></div>
+            <div className="purchase-info">
+                <div className="price">{item.currency}{item.price}</div>
+                <button>Добавить в корзину</button>
+            </div>
+        </div>
+    );
+
+    return itemRenderConfig;
+
+}
