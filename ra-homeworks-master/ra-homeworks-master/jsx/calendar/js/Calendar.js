@@ -145,28 +145,25 @@ const Calendar = (now) => {
             mountCastom = '13 месяц?'
     }
 
-
-
-    let calendarTable = (
-
+    let calendarTop = (
+      <div>test</div>
     );
-
     let result = (
         <div className="ui-datepicker">
-            <div className="ui-datepicker-material-header">
-              <div className="ui-datepicker-material-day">{day}</div>
-              <div className="ui-datepicker-material-date">
-                <div className="ui-datepicker-material-day-num">{dayNumber}</div>
-                <div className="ui-datepicker-material-month">{montCastom}</div>
-                <div className="ui-datepicker-material-year">{fullYear}</div>
-              </div>
+          <div className="ui-datepicker-material-header">
+            <div className="ui-datepicker-material-day">{day}</div>
+            <div className="ui-datepicker-material-date">
+              <div className="ui-datepicker-material-day-num">{dayNumber}</div>
+              <div className="ui-datepicker-material-month">{montCastom}</div>
+              <div className="ui-datepicker-material-year">{fullYear}</div>
             </div>
-            <div className="ui-datepicker-header">
-              <div className="ui-datepicker-title">
-                <span className="ui-datepicker-month">{month}</span>&nbsp;<span className="ui-datepicker-year">{fullYear}</span>
-              </div>
+          </div>
+          <div className="ui-datepicker-header">
+            <div className="ui-datepicker-title">
+              <span className="ui-datepicker-month">{month}</span>&nbsp;<span className="ui-datepicker-year">{fullYear}</span>
             </div>
-            {calendarTable}
+          </div>
+          {calendarTop}
         </div>
     );
 
