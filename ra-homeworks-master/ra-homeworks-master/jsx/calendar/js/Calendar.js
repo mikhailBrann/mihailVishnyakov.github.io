@@ -80,8 +80,25 @@ const Calendar = (now) => {
     let dayShort = now.toLocaleString('ru', { weekday: 'short' });
     let month = now.toLocaleString('ru', { month: 'long' });
     let montCastom;
-    let dayIsMont = () => {
-        return new Date(fullYear, now.toLocaleString('ru', { month: 'numeric' }), 0).getDate();
+
+    function dayIsMont(neighborMonth) {
+        let fullYear = now.getFullYear();
+        let month = now.getMonth();
+
+        if(neighborMonth == 'prev') {
+            let newMonth = now.getMonth() - 1;
+
+            if(newMonth < 0){
+                newMonth += 12;
+                fullYear -= 1;
+            }
+            return new Date(fullYear, newMonth + 1, 0).getDate();
+        } else if(neighborMonth == 'next') {
+            return new Date(fullYear, month + 2, 0).getDate();
+        } else {
+            return new Date(fullYear, month + 1, 0).getDate();
+        }
+
     }
 
     console.log(dayIsMont());
@@ -128,22 +145,24 @@ const Calendar = (now) => {
             mountCastom = '13 месяц?'
     }
 
-
+    let calendarTop = (
+        <div className="ui-datepicker-material-header">
+          <div className="ui-datepicker-material-day">{day}</div>
+          <div className="ui-datepicker-material-date">
+            <div className="ui-datepicker-material-day-num">{dayNumber}</div>
+            <div className="ui-datepicker-material-month">{montCastom}</div>
+            <div className="ui-datepicker-material-year">{fullYear}</div>
+          </div>
+        </div>
+        <div className="ui-datepicker-header">
+          <div className="ui-datepicker-title">
+            <span className="ui-datepicker-month">{month}</span>&nbsp;<span className="ui-datepicker-year">{fullYear}</span>
+          </div>
+        </div>
+    );
     let result = (
         <div className="ui-datepicker">
-          <div className="ui-datepicker-material-header">
-            <div className="ui-datepicker-material-day">{day}</div>
-            <div className="ui-datepicker-material-date">
-              <div className="ui-datepicker-material-day-num">{dayNumber}</div>
-              <div className="ui-datepicker-material-month">{montCastom}</div>
-              <div className="ui-datepicker-material-year">{fullYear}</div>
-            </div>
-          </div>
-          <div className="ui-datepicker-header">
-            <div className="ui-datepicker-title">
-              <span className="ui-datepicker-month">{month}</span>&nbsp;<span className="ui-datepicker-year">{fullYear}</span>
-            </div>
-          </div>
+            {calendarTop}
         </div>
     );
 
