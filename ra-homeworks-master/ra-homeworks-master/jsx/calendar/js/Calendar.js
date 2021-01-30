@@ -81,7 +81,7 @@ const Calendar = (now) => {
     let month = now.toLocaleString('ru', { month: 'long' });
     let montCastom;
 
-    function dayIsMont(neighborMonth) {
+    function daysIsMonth(neighborMonth) {
         let fullYear = now.getFullYear();
         let month = now.getMonth();
 
@@ -101,7 +101,35 @@ const Calendar = (now) => {
 
     }
 
-    
+    function calendarNumbersLogic(weekDayValue) {
+        let firstDayOnMonth = new Date();
+        firstDayOnMonth.setDate(0);
+        firstDayOnMonth = firstDayOnMonth.getDay();
+        let prevMonth = daysIsMonth('prev');
+        let nextMonth = daysIsMonth('next');
+
+        let monthsContPrev = [];
+        let monthsContThis = [];
+        let monthsContNext = [];
+
+        if(firstDayOnMonth > 0) {
+            for(let item = firstDayOnMonth; item > 0; item--) {
+              monthsContPrev.push({className: 'ui-datepicker-other-month', dayValue: prevMonth});
+              prevMonth--;
+            }
+        }
+
+        for(let item = 0; item < daysIsMonth(); item++) {
+            monthsContThis.push({className: '', dayValue: item + 1});
+        }
+
+        console.log(monthsContThis);
+
+
+    }
+
+    calendarNumbersLogic();
+
 
 
     switch(month) {
