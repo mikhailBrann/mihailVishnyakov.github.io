@@ -101,7 +101,7 @@ const Calendar = (now) => {
 
     }
 
-    console.log(dayIsMont());
+    
 
 
     switch(month) {
