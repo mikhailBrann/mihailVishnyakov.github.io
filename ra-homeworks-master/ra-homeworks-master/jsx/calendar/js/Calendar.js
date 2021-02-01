@@ -120,15 +120,34 @@ const Calendar = (now) => {
         }
 
         for(let item = 0; item < daysIsMonth(); item++) {
-            monthsContThis.push({className: '', dayValue: item + 1});
+            if(item == (dayNumber - 1)){
+                monthsContThis.push({className: 'ui-datepicker-today', dayValue: item + 1});
+            } else {
+                monthsContThis.push({className: '', dayValue: item + 1});
+            }
+
         }
 
-        console.log(monthsContThis);
+        for(let item = 0; item < (35 - (monthsContThis.length - monthsContPrev.length)); item++) {
+            monthsContNext.push({className: 'ui-datepicker-other-month', dayValue: item + 1});
+        }
 
+        let calendarListArray = monthsContPrev.concat(monthsContThis).concat(monthsContNext);
 
+        calendarListArray.map((item,index) => {
+            if(index == 0) {
+                item = <tr><td className={item.className}>{item.dayValue}<td>;
+            }else if(index == 34) {
+                item = <td className={item.className}>{item.dayValue}<td></tr>;
+            }else if((index % 6) == 0) {
+                item = </tr><tr><td className={item.className}>{item.dayValue}<td>;
+            }
+        });
+
+        return calendarListArray;
     }
 
-    calendarNumbersLogic();
+    let calendarList = calendarNumbersLogic();
 
 
 
@@ -173,26 +192,48 @@ const Calendar = (now) => {
             mountCastom = '13 месяц?'
     }
 
-    let calendarTop = (
-      <div>test</div>
-    );
+
     let result = (
-        <div className="ui-datepicker">
-          <div className="ui-datepicker-material-header">
-            <div className="ui-datepicker-material-day">{day}</div>
-            <div className="ui-datepicker-material-date">
-              <div className="ui-datepicker-material-day-num">{dayNumber}</div>
-              <div className="ui-datepicker-material-month">{montCastom}</div>
-              <div className="ui-datepicker-material-year">{fullYear}</div>
-            </div>
-          </div>
-          <div className="ui-datepicker-header">
-            <div className="ui-datepicker-title">
-              <span className="ui-datepicker-month">{month}</span>&nbsp;<span className="ui-datepicker-year">{fullYear}</span>
-            </div>
-          </div>
-          {calendarTop}
+    <div className="ui-datepicker">
+      <div className="ui-datepicker-material-header">
+        <div className="ui-datepicker-material-day">{day}</div>
+        <div className="ui-datepicker-material-date">
+          <div className="ui-datepicker-material-day-num">{dayNumber}</div>
+          <div className="ui-datepicker-material-month">{montCastom}</div>
+          <div className="ui-datepicker-material-year">{fullYear}</div>
         </div>
+      </div>
+      <div className="ui-datepicker-header">
+        <div className="ui-datepicker-title">
+          <span className="ui-datepicker-month">{month}</span>&nbsp;<span className="ui-datepicker-year">{fullYear}</span>
+        </div>
+      </div>
+      <table className="ui-datepicker-calendar">
+        <colgroup>
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col className="ui-datepicker-week-end" />
+          <col className="ui-datepicker-week-end" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col" title="Понедельник">Пн</th>
+            <th scope="col" title="Вторник">Вт</th>
+            <th scope="col" title="Среда">Ср</th>
+            <th scope="col" title="Четверг">Чт</th>
+            <th scope="col" title="Пятница">Пт</th>
+            <th scope="col" title="Суббота">Сб</th>
+            <th scope="col" title="Воскресенье">Вс</th>
+          </tr>
+        </thead>
+        <tbody>
+            {calendarList()}
+        </tbody>
+      </table>
+    </div>
     );
 
     return result;
