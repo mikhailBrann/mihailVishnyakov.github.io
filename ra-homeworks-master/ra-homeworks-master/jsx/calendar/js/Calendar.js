@@ -157,16 +157,16 @@ const Calendar = (now) => {
                 {calendarList.map((item, index) => calendarListRender(item,index,0,6))}
             </tr>
             <tr>
-                {calendarList.map((item, index) => calendarListRender(item,index,6,13))}
+                {calendarList.map((item, index) => calendarListRender(item,index,7,13))}
             </tr>
             <tr>
-                {calendarList.map((item, index) => calendarListRender(item,index,13,20))}
+                {calendarList.map((item, index) => calendarListRender(item,index,14,20))}
             </tr>
             <tr>
-                {calendarList.map((item, index) => calendarListRender(item,index,20,27))}
+                {calendarList.map((item, index) => calendarListRender(item,index,21,27))}
             </tr>
             <tr>
-                {calendarList.map((item, index) => calendarListRender(item,index,27,34))}
+                {calendarList.map((item, index) => calendarListRender(item,index,28,34))}
             </tr>
         </tbody>
       </table>
