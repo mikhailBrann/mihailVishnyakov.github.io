@@ -67,8 +67,8 @@ const Calendar = (now) => {
     let calendarList = calendarNumbersLogic();
 
     //функция для понедельного рендера
-    function calendarListRender(item,index,endWeekDayNumber) {
-      if(index <= endWeekDayNumber) {
+    function calendarListRender(item,index,startWeekDayNumber,endWeekDayNumber) {
+      if(index >= startWeekDayNumber && index <= endWeekDayNumber) {
         return <td className={item.className}>{item.dayValue}</td>;
       }
     }
@@ -154,19 +154,19 @@ const Calendar = (now) => {
         </thead>
         <tbody>
             <tr>
-                {calendarList.map((item, index) => calendarListRender(item,index, 6))}
+                {calendarList.map((item, index) => calendarListRender(item,index,0,6))}
             </tr>
             <tr>
-                {calendarList.map((item, index) => calendarListRender(item,index, 13))}
+                {calendarList.map((item, index) => calendarListRender(item,index,6,13))}
             </tr>
             <tr>
-                {calendarList.map((item, index) => calendarListRender(item,index, 20))}
+                {calendarList.map((item, index) => calendarListRender(item,index,13,20))}
             </tr>
             <tr>
-                {calendarList.map((item, index) => calendarListRender(item,index, 27))}
+                {calendarList.map((item, index) => calendarListRender(item,index,20,27))}
             </tr>
             <tr>
-                {calendarList.map((item, index) => calendarListRender(item,index, 34))}
+                {calendarList.map((item, index) => calendarListRender(item,index,27,34))}
             </tr>
         </tbody>
       </table>
