@@ -135,13 +135,7 @@ const Calendar = (now) => {
         let calendarListArray = monthsContPrev.concat(monthsContThis).concat(monthsContNext);
 
         calendarListArray.map((item,index) => {
-            if(index == 0) {
-                item = <tr><td className={item.className}>{item.dayValue}<td>;
-            }else if(index == 34) {
-                item = <td className={item.className}>{item.dayValue}<td></tr>;
-            }else if((index % 6) == 0) {
-                item = </tr><tr><td className={item.className}>{item.dayValue}<td>;
-            }
+             item = <td className={item.className}>{item.dayValue}</td>;
         });
 
         return calendarListArray;
