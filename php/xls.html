@@ -1,0 +1,155 @@
+<code>
+	<?
+require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
+$APPLICATION->AddChainItem("Блог", "/blog/");
+
+
+if (ini_get('mbstring.func_overload') & 2) {
+    $PHPEXCELPATH = "lib/PHPExcel/Classes_overload2";
+} else {
+    $PHPEXCELPATH = "lib/PHPExcel/Classes_overload0";
+}
+
+// Подключаем класс для работы с excel
+require_once($PHPEXCELPATH . '/PHPExcel.php');
+// Подключаем класс для вывода данных в формате excel
+require_once($PHPEXCELPATH . '/PHPExcel/Writer/Excel5.php');
+
+//создаем excel файл
+$fileType = 'Excel5';
+$objReader = PHPExcel_IOFactory::createReader($fileType);
+$objPHPExcel = new PHPExcel();
+$sheet = $objPHPExcel->getActiveSheet();
+//заполняем шапку файла
+//Получаем последний номер строки
+$numRowsTitle = $objPHPExcel->getActiveSheet()->getHighestRow();
+
+$sheet->getColumnDimension("A")->setWidth(60);
+$sheet->getColumnDimension("B")->setWidth(60);
+$sheet->getColumnDimension("C")->setWidth(60);
+$sheet->getColumnDimension("E")->setWidth(60);
+
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $numRowsTitle, 'Категория');
+$objPHPExcel->getActiveSheet()->setCellValue('B' . $numRowsTitle, 'Название');
+$objPHPExcel->getActiveSheet()->setCellValue('C' . $numRowsTitle, 'Описание');
+$objPHPExcel->getActiveSheet()->setCellValue('D' . $numRowsTitle, 'Цена');
+$objPHPExcel->getActiveSheet()->setCellValue('E' . $numRowsTitle, 'Фото');
+$objPHPExcel->getActiveSheet()->setCellValue('F' . $numRowsTitle, 'Популярный товар');
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $numRowsTitle, 'В наличии');
+
+
+//получаем url для картинки
+$url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+
+//создаем массив с исключаемыми секциями из основной выборки
+$filterSectionArray = [866,897,883,888,908,843,1188];
+$arFilterHunt = Array('IBLOCK_ID' => 2, 'SECTION_ID' => 841);
+$resFilter = CIBlockSection::GetList(Array(), $arFilterHunt, true, Array('ID'));
+//для того, чтобы не запускать еще один цикл, добавляем секции из аэрозолей сразу
+$filterArray = [1551,1552];
+
+while ($arSection = $resFilter->fetch()) {
+    if(in_array($arSection["ID"], $filterSectionArray) == false) {
+        $rsSection = \Bitrix\Iblock\SectionTable::getList(array(
+            'filter' => array(
+                "ACTIVE"    => "Y",
+                'IBLOCK_ID' => 2,
+                'IBLOCK_SECTION_ID' => $arSection["ID"],
+                '>=DEPTH_LEVEL' => 0
+            ),
+            'select' =>  array('ID'),
+        ));
+        while ($arSectionFilter = $rsSection->fetch()) {
+            $filterArray[] = $arSectionFilter["ID"];
+        }
+        $filterArray[] = $arSection["ID"];
+    }
+}
+
+//получаем остальные секции для списка
+$rsSection = \Bitrix\Iblock\SectionTable::getList(array(
+    'filter' => array(
+        "ACTIVE"    => "Y",
+        'IBLOCK_ID' => 2,
+        '>=DEPTH_LEVEL' => 2
+    ),
+    'select' =>  array('ID','CODE','NAME', 'DEPTH_LEVEL'),
+));
+
+$arSectionNumb = [];
+while ($arSection = $rsSection->fetch()) {
+    //отсекаем ненужные секции
+    if(in_array($arSection["ID"], $filterArray) == false) {
+        $arSectionNumb[] = $arSection;
+    }
+}
+
+//счетчик строк в Excel
+$count = 0;
+
+foreach ($arSectionNumb as $arSection) {
+    //ограничиваем вывод товара до 150
+    $rsElement = CIBlockElement::GetList(
+        $arOrder  = array("SORT" => "ASC"),
+        $arFilter = array(
+            "ACTIVE"    => "Y",
+            "IBLOCK_ID" => 2,
+            "INCLUDE_SUBSECTIONS" => "Y",
+            "SECTION_ID" => $arSection["ID"]
+        ),
+        false,
+        array("iNumPage" => 1, "nPageSize" => 151),
+        $arSelectFields = array("ID", "NAME", "IBLOCK_ID", "CODE","DETAIL_TEXT", "PREVIEW_PICTURE", "PROPERTY_*")
+    );
+
+
+    while($arElement = $rsElement->fetch()) {
+        //проверяем максимальное количество строк в файле
+        if($count <= 29999){
+            $name = mb_strimwidth($arElement["NAME"], 0, 197, '...');
+            $price = CPrice::GetBasePrice($arElement["ID"]);
+            $price = round($price["PRICE"]);
+            $img = $url . CFile::GetPath($arElement["PREVIEW_PICTURE"]);
+            $text = mb_strimwidth($arElement["DETAIL_TEXT"], 0, 247, '...');
+
+            $numRows = $objPHPExcel->getActiveSheet()->getHighestRow() + 1;
+            $sheet->getStyle("A")->getAlignment()->setWrapText(true);
+            $sheet->getStyle("B")->getAlignment()->setWrapText(true);
+            $sheet->getStyle("C")->getAlignment()->setWrapText(true);
+            $sheet->getStyle("E")->getAlignment()->setWrapText(true);
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A' . $numRows, $arSection["NAME"]);
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . $numRows, $name);
+            $objPHPExcel->getActiveSheet()->setCellValue('C' . $numRows, strip_tags($text));
+            $objPHPExcel->getActiveSheet()->setCellValue('D' . $numRows, $price);
+            $objPHPExcel->getActiveSheet()->setCellValue('E' . $numRows, $img);
+            $objPHPExcel->getActiveSheet()->setCellValue('F' . $numRows, '');
+            $objPHPExcel->getActiveSheet()->setCellValue('G' . $numRows, 'Да');
+
+            $count++;
+        } else {
+            break;
+        }
+    }
+}
+
+//закрываем файл
+$objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+$objWriter->save($_SERVER['DOCUMENT_ROOT'] . '/upload/report_catalog.xls');
+?>
+<div style="display:block; width: 100%;" class="loadFile">
+    <H1>Файл загружается...</H1>
+    <br>
+    <a href="/upload/report_catalog.xls" style="display:none;" download>скачать файл</a>
+</div>
+
+<script>
+    window.onload = function() {
+        document.querySelector('.loadFile h1').innerText = 'Загрузка завершена!';
+        $('.loadFile a').fadeIn();
+    };
+</script>
+<?
+require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
+?>
+</code>
