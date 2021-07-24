@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">   
+    <link rel="shortcut icon" type="image/png" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" > 
+    <link rel="stylesheet" href="/css/noob.css" class="css_checker">  
+    <title>Телефонная книга</title>
+    <script src="eel.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>  
+</head>
+
+
+<body>
+    <div class="main_wrapp">
+        <aside>
+            <div class="controll_buttons_wrapp">
+            </div>
+        </aside>
+        <section class="main_app_wrapp">
+            <h1>Телефонная книга</h1>
+            <div class="output_render_wrapp">
+
+            </div>
+
+
+        </section>
+    </div>
+</body>
+
+
+<script type="text/babel">
+    //общие функции
+    class Helper {
+        //перебор списка элементов для рендера
+        static renderList(item) {
+            return item;
+        }
+
+        //обработчик строчки списка
+        static noEmpty(enterString, descr = '') {
+            return enterString != '' ?  descr + enterString + ' ' : ''; 
+        }
+
+        static async getUserById(func) {
+            return await func;
+        }
+
+    }
+
+    //Класс для работы с бекендом и рендером адресной книги
+    class PhoneBook {
+        //добавляем пользователя в базу данных
+        static addContactClient() { 
+            let fieldsList = [
+                <input type="text" data-fild-name="name" placeholder="Имя"/>,
+                <input type="text" data-fild-name="fathername" placeholder="Отчетство" />,
+                <input type="text" data-fild-name="surname" placeholder="Фамилия" />,
+                <input type="text" data-fild-name="phone" placeholder="Телефон" />,
+                <input type="text" data-fild-name="email" placeholder="E-mail" />
+            ];
+
+            async function sendContact(attrName) {
+                let name = document.querySelector('input[data-fild-name="name"]');
+                let fathername = document.querySelector('input[data-fild-name="fathername"]');
+                let surname = document.querySelector('input[data-fild-name="surname"]');
+                let phone = document.querySelector('input[data-fild-name="phone"]');
+                let email = document.querySelector('input[data-fild-name="email"]');
+
+                let funcResult = await eel.addBookContact(name.value, fathername.value, surname.value, phone.value, email.value)();
+
+                //Добавляем вывод о добавлении контакта для пользователя
+                document.querySelector('.add_contact_result').innerText = 'Контакт ' 
+                    + (Helper.noEmpty(name.value) 
+                    + Helper.noEmpty(fathername.value) 
+                    + Helper.noEmpty(surname.value)) 
+                    + ' успешно добавлен в базу!';
+            }
+            
+            let renderCont = <div className="output_render_cont">
+                <span className="render_block_title">Добавить контакт</span>
+                {fieldsList.map((item) => Helper.renderList(item))}
+                <button className="btn_submit add_contact" onClick={sendContact}>Добавить контакт</button>
+                <output className="add_contact_result"></output>
+            </div>;
+
+            ReactDOM.render(renderCont,renderContWrapp);
+        }
+
+        //удаляем пользователя из базы данных
+        static removeContactClient() {
+            let fieldsList = [
+                <input type="text" data-fild-name="removeUser" placeholder="Введите id пользователя для удаления"/>,
+                <output name="removeUserResult"></output>
+            ];
+
+            function removeContact() {
+                async function removeToBook(delUserId) {
+                    let result = await eel.removeContact(delUserId)();
+                    return result;
+                }
+
+                let userId = document.querySelector('input[data-fild-name="removeUser"]').value;
+                let result = removeToBook(userId);
+
+                result.then(function(result){
+                    document.querySelector('output[name="removeUserResult"]').innerText = result;
+                });           
+            }
+
+            
+            let renderCont = <div className="output_render_cont">
+                <span className="render_block_title">Удаление контакта</span>
+                <span className="render_block_descr">Для удаления контакта из телефонной книги введите id пользователя</span> 
+                {fieldsList.map((item) => Helper.renderList(item))}
+                <button className="btn_submit remove_contact" onClick={removeContact}>Удалить контакт</button>
+            </div>;
+                
+            ReactDOM.render(renderCont,renderContWrapp);
+        }
+
+
+        //изменяем контакт пользователя
+        static editContactClient() {
+            let fieldsList = [
+                <div className="filds_cont title">
+                    <span>Укажите id пользователя</span>
+                    <input type="text" data-user-input="id" placeholder="id пользователя"/>
+                    <button onClick={getId} className="get_user_id_btn">Отправить</button>
+                </div>,
+                <div className="filds_cont">
+                    <output data-title-name="name"></output>
+                    <input type="text" data-fild-name="name" placeholder="Имя"/>
+                </div>,
+                <div className="filds_cont">
+                    <output data-title-name="fathername"></output>
+                    <input type="text" data-fild-name="fathername" placeholder="Отчетство" />
+                </div>,
+                <div className="filds_cont">
+                    <output data-title-name="surname"></output>
+                    <input type="text" data-fild-name="surname" placeholder="Фамилия" />
+                </div>,
+                <div className="filds_cont">
+                    <output data-title-name="phone"></output>
+                    <input type="text" data-fild-name="phone" placeholder="Телефон" />
+                </div>,
+                <div className="filds_cont">
+                    <output data-title-name="email"></output>
+                    <input type="text" data-fild-name="email" placeholder="E-mail" />
+                </div>
+            ];
+
+
+            let renderCont = <div className="output_render_cont">
+                <span className="render_block_title">Изменить контакт</span>
+                {fieldsList.map((item) => Helper.renderList(item))}
+                <button className="btn_submit change_contact" onClick={stateChange}>Принять изменения</button>
+            </div>;
+
+            ReactDOM.render(renderCont,renderContWrapp);
+
+            function getId() {
+                let inputId = document.querySelector('input[data-user-input="id"]').value;
+                let findTwo = Helper.getUserById(eel.getContactById(inputId)());
+
+                findTwo.then((result) => {
+                    let outputArray = Array.from(document.querySelectorAll('output[data-title-name]'));
+                    outputArray.map((output) => {
+                        for(let key in result) {
+                            if(output.dataset.titleName == key) {
+                                output.innerText = result[key];
+                            }
+                        }
+                    });
+                });
+            }
+            
+            function stateChange() {
+                let inputId = document.querySelector('input[data-user-input="id"]').value;
+                let inputArray = Array.from(document.querySelectorAll('input[data-fild-name]'));
+                let inputObject = {};
+                inputArray.map((input) => {
+                    if(input.value != '') {
+                        inputObject[input.dataset.fildName] = input.value;
+                    }
+                });
+            
+                let result = Helper.getUserById(eel.changeContact(inputId,inputObject)());
+                result.then(result => getId());
+            }
+
+        }
+
+
+        //выводим список пользователей
+        static showContactsClient() {
+            let contactListRender = [];
+            async function getAddrList() {
+                let funcResult = await eel.showContactsList()();
+                return funcResult;
+            }
+
+            let result = getAddrList();
+            //рендерим список контактов только тогда, когда его отдаст сервер
+            result.then(function(result) {
+                let listWrapp = [];
+                result.map((item) => {
+                    if(item.id != '') {
+                        listWrapp.push(
+                            (<li>
+                                <span>{Helper.noEmpty(item.id,'id: ')}</span> 
+                                <span>{Helper.noEmpty(item.name,'имя: ')}</span> 
+                                <span>{Helper.noEmpty(item.fathername,'отчество: ')}</span>  
+                                <span>{Helper.noEmpty(item.surname,'фамилия: ')}</span>  
+                                <span>{Helper.noEmpty(item.phone,'телефон: ')}</span> 
+                                <span>{Helper.noEmpty(item.email,'e-mail: ')}</span> 
+                            </li>)
+                        );
+                    }
+                                
+                });
+
+                let renderCont = <div className="output_render_cont">
+                    <span className="render_block_title">Список контактов</span>
+                    <ul>
+                        {listWrapp.map((item) => Helper.renderList(item))}
+                    </ul>
+                </div>;
+                
+                ReactDOM.render(renderCont,renderContWrapp);
+            });
+
+        }
+
+
+        //ищем пользователя
+        static findUserClient() {
+            let findUserListResult = [];
+            let valera = <p>serega</p>; 
+            //searchContact
+            let renderCont = <div className="output_render_cont">
+                <span className="render_block_title">Поиск контакта</span>
+                <input type="text" data-fild-name="findUser" placeholder="Введите id или Имя или Фамилию"/>
+                <button className="btn_submit find_contact" onClick={findContact}>Искать</button>          
+            </div>;
+                
+            ReactDOM.render(renderCont,renderContWrapp);
+
+            //функция поиска в базе основана на первом слове, введенном пользователем
+            function findContact() {
+                let userInput = document.querySelector('input[data-fild-name="findUser"]').value;
+                let findRequest = Helper.getUserById(eel.searchContact(userInput)());
+                let resultOutputWrapp = document.querySelector('.findResultWrapp');
+                let resultAnsewer;
+                findRequest.then((result) => {
+
+                    function returnAnswer(result) {
+                        let resultAnsewer = [];
+                        if(result != 'empty') {
+                            result.map((user) => {
+                                resultAnsewer.push(<span>
+                                    {Helper.noEmpty(user.id,'id: ')}
+                                    {Helper.noEmpty(user.name,'имя: ')}
+                                    {Helper.noEmpty(user.fathername,'отчество: ')} 
+                                    {Helper.noEmpty(user.surname,'фамилия: ')}  
+                                    {Helper.noEmpty(user.phone,'телефон: ')}
+                                    {Helper.noEmpty(user.email,'e-mail: ')} 
+                                </span>);  
+                            }); 
+                        } else {
+                            resultAnsewer.push(<span>Извините, поиск не дал рузультатов!</span>);
+                        }
+                        return resultAnsewer;               
+                    }
+
+                    let renderCont = <div className="output_render_cont">
+                        <span className="render_block_title">Результаты поиска</span>
+                        <input type="text" data-fild-name="findUser" placeholder="Введите id или Имя или Фамилию"/>
+                        <button className="btn_submit find_contact" onClick={findContact}>Искать</button>
+                        <div className="findResultWrapp">
+                            {returnAnswer(result)}
+                        </div>          
+                    </div>;
+                    ReactDOM.render(renderCont,renderContWrapp);    
+                });
+            }
+        }
+    }
+        
+
+    function changeTheme() {
+        let link = document.querySelector('link.css_checker');
+        link.classList.toggle('active');
+
+        if(link.classList.contains('active')) {
+            link.href = '/css/dark.css';
+        } else {
+            link.href = '/css/noob.css';
+        }
+    }
+
+
+
+    // основные контейнеры и элементы управления
+    const renderContWrapp = document.querySelector('.output_render_wrapp');
+
+    const controlBtnClass = "control_button";
+    const addBtn = (<button className={controlBtnClass} data-control="add" onClick={PhoneBook.addContactClient}>добавить контакт</button>),
+    removeBtn = (<button className={controlBtnClass} data-control="remove" onClick={PhoneBook.removeContactClient}>удалить контакт</button>),
+    changeBtn = (<button className={controlBtnClass} data-control="change" onClick={PhoneBook.editContactClient}>изменить контакт</button>),
+    findBtn = (<button className={controlBtnClass} data-control="find" onClick={PhoneBook.findUserClient}>найти контакт</button>),
+    showBtn = (<button className={controlBtnClass} data-control="show" onClick={PhoneBook.showContactsClient}>показать контакты</button>),
+    changeThemeBtn = (<button className={controlBtnClass} data-control="changeTheme" onClick={changeTheme}>сменить тему</button>);
+
+    const target = document.querySelector('.controll_buttons_wrapp'); 
+    ReactDOM.render([addBtn,removeBtn,changeBtn, findBtn, showBtn, changeThemeBtn],target);
+
+</script>
+</html>

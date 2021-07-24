@@ -1,0 +1,154 @@
+* {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.controll_buttons_wrapp {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.control_button {
+    background: none;
+    box-sizing: border-box;
+    padding: 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+[data-control="changeTheme"] {
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    bottom: 10px;
+    right: 10px;
+}
+
+body {
+    position: relative;
+    height: 100vh;
+    display: block;
+}
+
+.output_render_cont {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    width: 100%;
+}
+
+.output_render_cont > * {
+    font-size: 13px;
+    box-sizing: border-box;
+    padding: 15px;
+}
+
+.output_render_cont > *.render_block_title {
+    margin: 20px 0;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.output_render_cont > * {
+    margin-bottom: 10px;
+}
+
+.filds_cont {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    width: 100%;
+}
+
+.filds_cont input {
+    font-size: 16px;
+    box-sizing: border-box;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+button {
+    margin: 10px auto;
+    box-sizing: border-box;
+    padding: 12px;
+}
+
+.output_render_cont ul {
+    list-style: none;
+}
+
+.output_render_cont li {
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    padding: 15px;
+    font-size: 14px;
+}
+
+.output_render_cont li:nth-child(odd) {
+    background: #dcd7d75e;
+}
+
+.output_render_cont li:nth-child(even) {
+    background: #dcd7d7;
+    color: #191919;
+}
+
+.findResultWrapp {
+    display: flex;
+    flex-direction: column;
+}
+
+.findResultWrapp > span {
+    box-sizing: border-box;
+    padding: 15px 0;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+input[type="text"] {
+    background: none;
+    border: none;
+    border-bottom: 2px solid;
+    font-size: 18px;
+    box-sizing: border-box;
+    padding: 15px 50px;
+    text-align: center;
+    outline: none;
+    width: 100%;
+}
+
+button {
+    border: none;
+    background: none;
+    font-weight: 900;
+    text-transform: uppercase;
+    border-left: 2px solid;
+    border-right: 2px solid;
+    cursor: pointer;
+    border-radius: 15px;
+}
+
+.controll_buttons_wrapp button {
+    margin: 10px 5px;
+}
+
+.main_wrapp {
+    background: #ffffff73;
+    box-sizing: border-box;
+    padding: 15px;
+    border-radius: 15px;
+    margin: 20px;
+    box-shadow: 0 0 11px 2px black;
+}
+
+button {
+    transition: .4s;
+}
+
+.render_block_descr {
+    font-size: 18px;
+}

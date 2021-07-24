@@ -1,0 +1,34 @@
+body {
+    position: relative;
+    height: 100vh;
+    display: block;
+    background-image: url(/img/bg/light_bg.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body * {
+    color: #291818;
+}
+
+
+.main_wrapp {
+    background: #ffffff73;
+    box-sizing: border-box;
+    padding: 15px;
+    border-radius: 15px;
+    margin: 20px;
+    box-shadow: 0 0 11px 2px black;
+}
+
+
+[data-control="changeTheme"] {
+    background: #ffffff;
+    box-shadow: 0 0 8px white;
+}
+
+button:hover {
+    background: #ffffff6b;
+    box-shadow: 0 0 6px white;
+}
