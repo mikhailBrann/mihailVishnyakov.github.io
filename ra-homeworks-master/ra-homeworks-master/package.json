@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/netology-code/ra-homeworks#readme",
   "devDependencies": {
-    "browser-sync": "^2.18.12",
+    "browser-sync": "^2.27.10",
     "highlight.js": "^9.11.0",
     "markdown-it": "^8.3.1"
   },
